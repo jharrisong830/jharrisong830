@@ -1,0 +1,2 @@
+- 👋 Hi, I’m @jharrisong830
+- 🌱 I’m currently learning everything! (working on personal projects)

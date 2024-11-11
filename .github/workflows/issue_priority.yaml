@@ -1,0 +1,29 @@
+name: Add priority to new issues
+run-name: "Add priority to issue #${{ github.event.issue.number }} (opened by @${{ github.actor }})"
+on:
+  issues:
+    types:
+      - opened
+jobs:
+  assign_priority_if_missing:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    if: |
+      !(
+        contains(github.event.issue.labels.*.name, 'priority - HIGH') ||
+        contains(github.event.issue.labels.*.name, 'priority - MID') ||
+        contains(github.event.issue.labels.*.name, 'priority - LOW')
+      )
+    steps:
+    - env: 
+        NUMBER: ${{ github.event.issue.number }}
+        TITLE: ${{ github.event.issue.title }}
+        ACTOR: ${{ github.actor }}
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run: | 
+        echo "Adding default priority 'MID' for issue #${NUMBER}"
+        echo "Issue title: '${TITLE}'"
+        echo "Opened by @${ACTOR}"
+        gh issue edit "$NUMBER" --add-label "priority - MID"
